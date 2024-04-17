@@ -1,5 +1,6 @@
 package com.example.bootcamp_2024_onclass_ms_user.configuration.security;
 
+import com.example.bootcamp_2024_onclass_ms_user.configuration.exceptionhandler.ControllerAdvisor;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt.JwtAuthenticationFilter;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt.controlleradvisor.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,11 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
         return new JwtAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public ControllerAdvisor controllerAdvisor() {
+        return new ControllerAdvisor();
     }
 
     @Bean

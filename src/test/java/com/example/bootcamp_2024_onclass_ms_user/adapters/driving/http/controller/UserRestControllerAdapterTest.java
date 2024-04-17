@@ -41,20 +41,43 @@ class UserRestControllerAdapterTest {
     @Test
     @DisplayName("When_AddUser_Expect_CorrectResponse")
     void testAddUser() {
-        AddUserRequest request = new AddUserRequest("Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 1L, "123456");
-        User expectedUser = new User(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 1L, "123456");
-        UserResponse expectedResponse = new UserResponse(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", "ADMINISTRATOR", "123456");
+        AddUserRequest requestAdmin = new AddUserRequest("Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 1L, "123456");
+        AddUserRequest requestTutor = new AddUserRequest("Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 2L, "123456");
 
-        when(userRequestMapper.addRequestToUser(request)).thenReturn(expectedUser);
-        when(userServicePort.saveUser(expectedUser)).thenReturn(expectedUser);
-        when(userResponseMapper.toUserResponse(expectedUser)).thenReturn(expectedResponse);
+        User expectedUserAdmin = new User(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 1L, "123456");
+        User expectedUserTutor = new User(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", 2L, "123456");
 
-        ResponseEntity<UserResponse> responseEntity = userRestControllerAdapter.addAdmin(request);
+        UserResponse expectedResponseAdmin = new UserResponse(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", "ADMINISTRATOR", "123456");
+        UserResponse expectedResponseTutor = new UserResponse(1L, "Samuel", "Velez", "1127532895", "3056987741", "samuel.velez@uc.cl", "TUTOR", "123456");
 
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals(expectedResponse, responseEntity.getBody());
-        verify(userRequestMapper, times(1)).addRequestToUser(request);
-        verify(userServicePort, times(1)).saveUser(expectedUser);
-        verify(userResponseMapper, times(1)).toUserResponse(expectedUser);
+        when(userRequestMapper.addRequestToUser(requestAdmin)).thenReturn(expectedUserAdmin);
+        when(userRequestMapper.addRequestToUser(requestTutor)).thenReturn(expectedUserTutor);
+
+
+        when(userServicePort.saveAdmin(expectedUserAdmin)).thenReturn(expectedUserAdmin);
+        when(userServicePort.saveTutor(expectedUserTutor)).thenReturn(expectedUserTutor);
+
+        when(userResponseMapper.toUserResponse(expectedUserAdmin)).thenReturn(expectedResponseAdmin);
+        when(userResponseMapper.toUserResponse(expectedUserTutor)).thenReturn(expectedResponseTutor);
+
+
+        ResponseEntity<UserResponse> responseEntityAdmin = userRestControllerAdapter.addAdmin(requestAdmin);
+        ResponseEntity<UserResponse> responseEntityTutor = userRestControllerAdapter.addTutor(requestTutor);
+
+        assertEquals(HttpStatus.CREATED, responseEntityAdmin.getStatusCode());
+        assertEquals(HttpStatus.CREATED, responseEntityTutor.getStatusCode());
+
+        assertEquals(expectedResponseAdmin, responseEntityAdmin.getBody());
+        assertEquals(expectedResponseTutor, responseEntityTutor.getBody());
+
+        verify(userRequestMapper, times(1)).addRequestToUser(requestAdmin);
+        verify(userRequestMapper, times(1)).addRequestToUser(requestTutor);
+
+        verify(userServicePort, times(1)).saveAdmin(expectedUserAdmin);
+        verify(userServicePort, times(1)).saveTutor(expectedUserTutor);
+
+        verify(userResponseMapper, times(1)).toUserResponse(expectedUserAdmin);
+        verify(userResponseMapper, times(1)).toUserResponse(expectedUserTutor);
     }
+
 }

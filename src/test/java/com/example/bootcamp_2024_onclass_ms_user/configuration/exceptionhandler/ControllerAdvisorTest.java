@@ -2,6 +2,7 @@ package com.example.bootcamp_2024_onclass_ms_user.configuration.exceptionhandler
 
 import com.example.bootcamp_2024_onclass_ms_user.configuration.Constants;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidArgumentsEmailException;
+import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidRoleException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -115,6 +116,28 @@ class ControllerAdvisorTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, responseEntity.getBody().getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getBody().getStatus());
+        assertEquals(LocalDateTime.now().getDayOfYear(), responseEntity.getBody().getTimestamp().getDayOfYear());
+    }
+
+    @Test
+    @DisplayName("Handle Invalid Role Exception")
+    void testHandleInvalidRoleException() {
+        ControllerAdvisor controllerAdvisor = new ControllerAdvisor();
+        InvalidRoleException exception = new InvalidRoleException();
+        ResponseEntity<ExceptionResponse> expectedResponse = new ResponseEntity<>(
+                new ExceptionResponse(
+                        String.format(Constants.INVALID_ROLE_EXCEPTION_MESSAGE, exception.getMessage()),
+                        HttpStatus.BAD_REQUEST.toString(),
+                        LocalDateTime.now()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+
+        ResponseEntity<ExceptionResponse> responseEntity = controllerAdvisor.handleInvalidRoleException(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(Constants.INVALID_ROLE_EXCEPTION_MESSAGE, responseEntity.getBody().getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getBody().getStatus());
         assertEquals(LocalDateTime.now().getDayOfYear(), responseEntity.getBody().getTimestamp().getDayOfYear());
     }
