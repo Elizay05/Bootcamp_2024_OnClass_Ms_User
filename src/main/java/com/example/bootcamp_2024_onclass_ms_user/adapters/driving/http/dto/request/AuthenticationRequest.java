@@ -3,7 +3,6 @@ package com.example.bootcamp_2024_onclass_ms_user.adapters.driving.http.dto.requ
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
