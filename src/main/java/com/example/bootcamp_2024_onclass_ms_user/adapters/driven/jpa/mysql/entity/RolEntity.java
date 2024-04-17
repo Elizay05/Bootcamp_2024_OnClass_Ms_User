@@ -2,10 +2,7 @@ package com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.enti
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
@@ -14,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class RolEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

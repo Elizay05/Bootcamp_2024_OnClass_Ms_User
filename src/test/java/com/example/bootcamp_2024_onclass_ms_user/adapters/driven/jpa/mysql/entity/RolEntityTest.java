@@ -24,7 +24,11 @@ class RolEntityTest {
         String name = "ADMINISTRATOR";
         String description = "You are an Administrator of the sistem";
 
-        RolEntity entity = new RolEntity(id, name, description);
+        RolEntity entity = RolEntity.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .build();
 
         var violations = validator.validate(entity);
 
@@ -38,7 +42,7 @@ class RolEntityTest {
         String name = "ADMINISTRATOR";
         String description = "You are an Administrator of the sistem";
 
-        RolEntity entity = new RolEntity();
+        RolEntity entity = RolEntity.builder().build();
         entity.setId(id);
         entity.setName(name);
         entity.setDescription(description);
@@ -55,7 +59,11 @@ class RolEntityTest {
         String name = "ADMINISTRATOR";
         String description = "You are an Administrator of the sistem";
 
-        RolEntity entity = new RolEntity(id, name, description);
+        RolEntity entity = RolEntity.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .build();
 
         assertEquals(id, entity.getId());
         assertEquals(name, entity.getName());

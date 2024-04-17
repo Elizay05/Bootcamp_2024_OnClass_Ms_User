@@ -10,10 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/register")
@@ -24,6 +22,7 @@ public class UserRestControllerAdapter {
     private final IUserRequestMapper userRequestMapper;
     private final IUserResponseMapper userResponseMapper;
 
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR')")
     @PostMapping("/admin")
     public ResponseEntity<UserResponse> addAdmin(@Valid @RequestBody AddUserRequest request) {
         User user = userRequestMapper.addRequestToUser(request);
@@ -32,4 +31,9 @@ public class UserRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasAnyAuthority('TUTOR')")
+    @GetMapping("/tutor")
+    public ResponseEntity<String> addTutor() {
+        return ResponseEntity.status(HttpStatus.OK).body("Welcome Tutor");
+    }
 }
