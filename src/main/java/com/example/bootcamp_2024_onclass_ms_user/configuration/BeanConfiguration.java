@@ -5,7 +5,7 @@ import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.adapt
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.mapper.IUserEntityMapper;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.repository.IRolRepository;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.repository.IUserRepository;
-import com.example.bootcamp_2024_onclass_ms_user.configuration.security.JwtService;
+import com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt.JwtService;
 import com.example.bootcamp_2024_onclass_ms_user.domain.api.IAuthenticationServicePort;
 import com.example.bootcamp_2024_onclass_ms_user.domain.api.IUserServicePort;
 import com.example.bootcamp_2024_onclass_ms_user.domain.api.usecase.AuthenticationUseCase;

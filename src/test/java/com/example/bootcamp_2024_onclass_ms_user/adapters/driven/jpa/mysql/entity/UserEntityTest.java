@@ -28,7 +28,17 @@ class UserEntityTest {
         String password = "pablo123";
         RolEntity rolEntity = new RolEntity();
 
-        UserEntity entity = new UserEntity(id, name, lastName, identificationDocument, cellphoneNumber, email, password, rolEntity);
+        UserEntity entity = UserEntity.builder()
+                .id(id)
+                .name(name)
+                .lastName(lastName)
+                .identificationDocument(identificationDocument)
+                .cellphoneNumber(cellphoneNumber)
+                .email(email)
+                .password(password)
+                .rol(rolEntity)
+                .build();
+
 
         var violations = validator.validate(entity);
 
@@ -47,7 +57,7 @@ class UserEntityTest {
         String password = "pablo123";
         RolEntity rolEntity = new RolEntity();
 
-        UserEntity entity = new UserEntity();
+        UserEntity entity = UserEntity.builder().build();
         entity.setId(id);
         entity.setName(name);
         entity.setLastName(lastName);
@@ -74,7 +84,16 @@ class UserEntityTest {
         String password = "pablo123";
         RolEntity rolEntity = new RolEntity();
 
-        UserEntity entity = new UserEntity(id, name, lastName, identificationDocument, cellphoneNumber, email, password, rolEntity);
+        UserEntity entity = UserEntity.builder()
+                .id(id)
+                .name(name)
+                .lastName(lastName)
+                .identificationDocument(identificationDocument)
+                .cellphoneNumber(cellphoneNumber)
+                .email(email)
+                .password(password)
+                .rol(rolEntity)
+                .build();
 
         assertEquals(id, entity.getId());
         assertEquals(name, entity.getName());

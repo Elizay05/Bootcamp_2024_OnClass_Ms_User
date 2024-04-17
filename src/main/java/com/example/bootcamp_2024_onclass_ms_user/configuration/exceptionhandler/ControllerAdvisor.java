@@ -46,4 +46,5 @@ public class ControllerAdvisor {
                 String.format(Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.bootcamp_2024_onclass_ms_user.configuration.security;
+package com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,6 +23,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRol(String token) {
+        return extractClaim(token, claims -> (String) claims.get("role"));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -32,7 +36,7 @@ public class JwtService {
         String rol = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("rol", rol);
+        claims.put("role", rol);
 
         return generateToken(claims, userDetails);
     }

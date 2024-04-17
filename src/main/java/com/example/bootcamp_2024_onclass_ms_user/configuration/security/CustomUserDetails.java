@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private UserEntity userEntity;
+    public UserEntity userEntity;
 
     public CustomUserDetails(UserEntity userEntity) {
         this.userEntity = userEntity;
