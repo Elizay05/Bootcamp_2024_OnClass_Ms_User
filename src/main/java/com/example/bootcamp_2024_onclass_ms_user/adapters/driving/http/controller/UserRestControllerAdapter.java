@@ -39,4 +39,13 @@ public class UserRestControllerAdapter {
         UserResponse response = userResponseMapper.toUserResponse(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR') or hasAnyAuthority('TUTOR')")
+    @PostMapping("/student")
+    public ResponseEntity<UserResponse> addStudent(@Valid @RequestBody AddUserRequest request) {
+        User user = userRequestMapper.addRequestToUser(request);
+        user = userServicePort.saveStudent(user);
+        UserResponse response = userResponseMapper.toUserResponse(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }

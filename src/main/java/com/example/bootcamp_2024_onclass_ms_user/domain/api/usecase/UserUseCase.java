@@ -47,6 +47,20 @@ public class UserUseCase implements IUserServicePort {
         return userPersistencePort.saveUser(user);
     }
 
+    @Override
+    public User saveStudent(User user) {
+        if (!isValidEmail(user.getEmail())) {
+            throw new InvalidArgumentsEmailException();
+        }
+        if (user.getRolId() == ID_ROL_ADMINISTRATOR || user.getRolId() == ID_ROL_TUTOR) {
+            throw new InvalidRoleException();
+        }
+        String encryptedPassword = passwordEncryptionPort.encryptPassword(user.getPassword());
+        user.setPassword(encryptedPassword);
+
+        return userPersistencePort.saveUser(user);
+    }
+
     public static boolean isValidEmail(String email) {
         String regex = "^[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?$";
         return email.matches(regex);
