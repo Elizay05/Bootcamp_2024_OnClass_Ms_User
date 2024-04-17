@@ -26,14 +26,17 @@ public class UserRestControllerAdapter {
     @PostMapping("/admin")
     public ResponseEntity<UserResponse> addAdmin(@Valid @RequestBody AddUserRequest request) {
         User user = userRequestMapper.addRequestToUser(request);
-        user = userServicePort.saveUser(user);
+        user = userServicePort.saveAdmin(user);
         UserResponse response = userResponseMapper.toUserResponse(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasAnyAuthority('TUTOR')")
-    @GetMapping("/tutor")
-    public ResponseEntity<String> addTutor() {
-        return ResponseEntity.status(HttpStatus.OK).body("Welcome Tutor");
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR')")
+    @PostMapping("/tutor")
+    public ResponseEntity<UserResponse> addTutor(@Valid @RequestBody AddUserRequest request) {
+        User user = userRequestMapper.addRequestToUser(request);
+        user = userServicePort.saveTutor(user);
+        UserResponse response = userResponseMapper.toUserResponse(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

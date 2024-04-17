@@ -5,6 +5,7 @@ import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.excep
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.IdentificationDocumentAlreadyExistsException;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.Constants;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidArgumentsEmailException;
+import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidRoleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,13 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleInvalidArgumentsEmailException(InvalidArgumentsEmailException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 String.format(Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, exception.getMessage()),
+                HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidRoleException(InvalidRoleException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(Constants.INVALID_ROLE_EXCEPTION_MESSAGE, exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 

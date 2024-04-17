@@ -1,6 +1,7 @@
 package com.example.bootcamp_2024_onclass_ms_user.domain.api.usecase;
 
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidArgumentsEmailException;
+import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidRoleException;
 import com.example.bootcamp_2024_onclass_ms_user.domain.model.User;
 import com.example.bootcamp_2024_onclass_ms_user.domain.spi.IPasswordEncryptionPort;
 import com.example.bootcamp_2024_onclass_ms_user.domain.spi.IUserPersistencePort;
@@ -34,15 +35,21 @@ class UserUseCaseTest {
     @Test
     @DisplayName("When_SaveUserWith_PasswordEncryption_Expect_Success")
     void testSaveUserSuccess_With_PasswordEncryption() {
-        User user = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 1L, "password");
+        User userAdmin = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 1L, "password");
+        User userTutor = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 2L, "password");
+
 
         when(passwordEncryptionPort.encryptPassword("password")).thenReturn("encryptedPassword");
-        when(userPersistencePort.saveUser(user)).thenReturn(user);
+        when(userPersistencePort.saveUser(userAdmin)).thenReturn(userAdmin);
+        when(userPersistencePort.saveUser(userTutor)).thenReturn(userTutor);
 
-        User savedUser = userUseCase.saveUser(user);
+        User savedUserAdmin = userUseCase.saveAdmin(userAdmin);
+        User savedUserTutor = userUseCase.saveTutor(userTutor);
 
-        assertEquals("encryptedPassword", savedUser.getPassword());
-        verify(userPersistencePort, times(1)).saveUser(user);
+        assertEquals("encryptedPassword", savedUserAdmin.getPassword());
+        assertEquals("encryptedPassword", savedUserTutor.getPassword());
+        verify(userPersistencePort, times(1)).saveUser(userAdmin);
+        verify(userPersistencePort, times(1)).saveUser(userTutor);
     }
 
     @Test
@@ -51,8 +58,29 @@ class UserUseCaseTest {
         User user = new User(1L, "John", "Doe", "123456789", "555-5555", "invalidEmail", 1L, "password");
 
         assertThrows(InvalidArgumentsEmailException.class, () -> {
-            userUseCase.saveUser(user);
+            userUseCase.saveAdmin(user);
         });
+        assertThrows(InvalidArgumentsEmailException.class, () -> {
+            userUseCase.saveTutor(user);
+        });
+
         verify(userPersistencePort, never()).saveUser(user);
+    }
+
+    @Test
+    @DisplayName("When_SaveUserWith_InvalidRol_Expect_Exception")
+    void testSaveUserSuccess_With_InvalidRol() {
+        User userAdmin = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 2L, "password");
+        User userTutor = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 3L, "password");
+
+        assertThrows(InvalidRoleException.class, () -> {
+            userUseCase.saveAdmin(userAdmin);
+        });
+        assertThrows(InvalidRoleException.class, () -> {
+            userUseCase.saveTutor(userTutor);
+        });
+
+        verify(userPersistencePort, never()).saveUser(userAdmin);
+        verify(userPersistencePort, never()).saveUser(userTutor);
     }
 }
