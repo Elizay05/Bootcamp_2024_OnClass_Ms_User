@@ -7,4 +7,6 @@ public interface IUserServicePort {
     User saveAdmin(User user);
 
     User saveTutor(User user);
+
+    User saveStudent(User user);
 }

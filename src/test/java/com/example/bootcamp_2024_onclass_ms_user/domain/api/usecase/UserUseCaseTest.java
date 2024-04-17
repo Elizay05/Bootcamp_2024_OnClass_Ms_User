@@ -37,19 +37,24 @@ class UserUseCaseTest {
     void testSaveUserSuccess_With_PasswordEncryption() {
         User userAdmin = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 1L, "password");
         User userTutor = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 2L, "password");
+        User userStudent = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 3L, "password");
 
 
         when(passwordEncryptionPort.encryptPassword("password")).thenReturn("encryptedPassword");
         when(userPersistencePort.saveUser(userAdmin)).thenReturn(userAdmin);
         when(userPersistencePort.saveUser(userTutor)).thenReturn(userTutor);
+        when(userPersistencePort.saveUser(userStudent)).thenReturn(userStudent);
 
         User savedUserAdmin = userUseCase.saveAdmin(userAdmin);
         User savedUserTutor = userUseCase.saveTutor(userTutor);
+        User savedUserStudent = userUseCase.saveStudent(userStudent);
 
         assertEquals("encryptedPassword", savedUserAdmin.getPassword());
         assertEquals("encryptedPassword", savedUserTutor.getPassword());
+        assertEquals("encryptedPassword", savedUserStudent.getPassword());
         verify(userPersistencePort, times(1)).saveUser(userAdmin);
         verify(userPersistencePort, times(1)).saveUser(userTutor);
+        verify(userPersistencePort, times(1)).saveUser(userStudent);
     }
 
     @Test
@@ -63,6 +68,9 @@ class UserUseCaseTest {
         assertThrows(InvalidArgumentsEmailException.class, () -> {
             userUseCase.saveTutor(user);
         });
+        assertThrows(InvalidArgumentsEmailException.class, () -> {
+            userUseCase.saveStudent(user);
+        });
 
         verify(userPersistencePort, never()).saveUser(user);
     }
@@ -72,6 +80,7 @@ class UserUseCaseTest {
     void testSaveUserSuccess_With_InvalidRol() {
         User userAdmin = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 2L, "password");
         User userTutor = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 3L, "password");
+        User userStudent = new User(1L, "John", "Doe", "123456789", "555-5555", "john.doe@example.com", 1L, "password");
 
         assertThrows(InvalidRoleException.class, () -> {
             userUseCase.saveAdmin(userAdmin);
@@ -79,8 +88,12 @@ class UserUseCaseTest {
         assertThrows(InvalidRoleException.class, () -> {
             userUseCase.saveTutor(userTutor);
         });
+        assertThrows(InvalidRoleException.class, () -> {
+            userUseCase.saveStudent(userStudent);
+        });
 
         verify(userPersistencePort, never()).saveUser(userAdmin);
         verify(userPersistencePort, never()).saveUser(userTutor);
+        verify(userPersistencePort, never()).saveUser(userStudent);
     }
 }
