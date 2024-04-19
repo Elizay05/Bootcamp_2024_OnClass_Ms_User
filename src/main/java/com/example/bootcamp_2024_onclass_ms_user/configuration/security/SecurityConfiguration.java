@@ -33,7 +33,6 @@ public class SecurityConfiguration {
         http.csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

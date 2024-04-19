@@ -3,7 +3,6 @@ package com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.entity.RolEntity;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.entity.UserEntity;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.security.CustomUserDetails;
-import com.example.bootcamp_2024_onclass_ms_user.configuration.security.jwt.exception.JwtAuthenticationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -46,29 +45,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
-        userRole = jwtService.extractRol(jwt);
-        userRoleEntity = RolEntity.builder().name(userRole).build();
+        //Dividir el código en métodos para que sea más entendible.
+        //Una parte es extraer toda la información del token
+        //Otra parte es setearle
+        //meter todos los llamados en el try
         try {
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = new CustomUserDetails(UserEntity.builder().email(userEmail).rol(userRoleEntity).build());
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                } else {
-                    throw new JwtAuthenticationException("El token es inválido", null);
+            userEmail = jwtService.extractUsername(jwt);
+            userRole = jwtService.extractRol(jwt);
+            userRoleEntity = RolEntity.builder().name(userRole).build();
+                if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = new CustomUserDetails(UserEntity.builder().email(userEmail).rol(userRoleEntity).build());
+                    if (jwtService.isTokenValid(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                        authToken.setDetails(
+                                new WebAuthenticationDetailsSource().buildDetails(request)
+                        );
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
-            }
         } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("Error de autenticación JWT: " + e.getMessage(), e);
+            request.getSession().setAttribute("error", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
