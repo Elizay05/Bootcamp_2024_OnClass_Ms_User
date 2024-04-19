@@ -112,7 +112,7 @@ class ControllerAdvisorTest {
                 HttpStatus.BAD_REQUEST
         );
 
-        ResponseEntity<ExceptionResponse> responseEntity = controllerAdvisor.handleInvalidArgumentsEmailException(exception);
+        ResponseEntity<ExceptionResponse> responseEntity = controllerAdvisor.handleInvalidArgumentsEmailException();
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, responseEntity.getBody().getMessage());

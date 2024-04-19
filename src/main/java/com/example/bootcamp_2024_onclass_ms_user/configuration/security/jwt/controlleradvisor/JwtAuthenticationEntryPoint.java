@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -21,11 +20,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType("application/json");
 
         String errorMessage = "Acceso no autorizado";
-        if (authException != null) {
-            errorMessage = authException.getMessage();
+        if (request.getSession().getAttribute("error") != null) {
+            errorMessage = request.getSession().getAttribute("error").toString();
         }
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

@@ -37,15 +37,14 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(IdentificationDocumentAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> handleIdentificationDocumentAlreadyExistsException() {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
                 Constants.IDENTIFICATION_DOCUMENT_ALREADY_EXISTS, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(InvalidArgumentsEmailException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidArgumentsEmailException(InvalidArgumentsEmailException exception) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, exception.getMessage()),
-                HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    public ResponseEntity<ExceptionResponse> handleInvalidArgumentsEmailException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
+                Constants.ARGUMENTS_EMAIL_NOT_VALID_EXCEPTION_MESSAGE, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(InvalidRoleException.class)

@@ -2,7 +2,7 @@ package com.example.bootcamp_2024_onclass_ms_user.configuration.exceptionhandler
 
 import java.time.LocalDateTime;
 
-public class ExceptionResponse extends Throwable {
+public class ExceptionResponse {
 
     private final String message;
     private final String status;
