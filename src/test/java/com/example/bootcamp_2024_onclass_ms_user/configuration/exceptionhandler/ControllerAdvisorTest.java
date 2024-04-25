@@ -1,5 +1,6 @@
 package com.example.bootcamp_2024_onclass_ms_user.configuration.exceptionhandler;
 
+import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.FieldAlreadyExistsException;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.Constants;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidArgumentsEmailException;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidRoleException;
@@ -78,22 +79,25 @@ class ControllerAdvisorTest {
     }
 
     @Test
-    @DisplayName("Handle Identity Document Already Exists Exception")
-    void testHandleIdentityDocumentAlreadyExistsException() {
+    @DisplayName("Handle Field Already Exists Exception")
+    void testHandleFieldAlreadyExistsException() {
         ControllerAdvisor controllerAdvisor = new ControllerAdvisor();
+
+        FieldAlreadyExistsException exception = new FieldAlreadyExistsException("The Email");
+        String errorMessage = String.format(Constants.FIELD_ALREADY_EXISTS, exception.getMessage());
         ResponseEntity<ExceptionResponse> expectedResponse = new ResponseEntity<>(
                 new ExceptionResponse(
-                        Constants.IDENTIFICATION_DOCUMENT_ALREADY_EXISTS,
+                        errorMessage,
                         HttpStatus.BAD_REQUEST.toString(),
                         LocalDateTime.now()
                 ),
                 HttpStatus.BAD_REQUEST
         );
 
-        ResponseEntity<ExceptionResponse> responseEntity = controllerAdvisor.handleIdentificationDocumentAlreadyExistsException();
+        ResponseEntity<ExceptionResponse> responseEntity = controllerAdvisor.handleFieldAlreadyExistsException(exception);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals(Constants.IDENTIFICATION_DOCUMENT_ALREADY_EXISTS, responseEntity.getBody().getMessage());
+        assertEquals(errorMessage, responseEntity.getBody().getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), responseEntity.getBody().getStatus());
         assertEquals(LocalDateTime.now().getDayOfYear(), responseEntity.getBody().getTimestamp().getDayOfYear());
     }

@@ -3,7 +3,7 @@ package com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.adap
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.entity.RolEntity;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.entity.UserEntity;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.ElementNotFoundException;
-import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.IdentificationDocumentAlreadyExistsException;
+import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.FieldAlreadyExistsException;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.mapper.IUserEntityMapper;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.repository.IRolRepository;
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.repository.IUserRepository;
@@ -11,16 +11,13 @@ import com.example.bootcamp_2024_onclass_ms_user.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -87,7 +84,7 @@ class UserAdapterTest {
 
         when(userRepository.findByIdentificationDocument("123456789")).thenReturn(Collections.singletonList(new UserEntity()));
 
-        assertThrows(IdentificationDocumentAlreadyExistsException.class, () -> userAdapter.saveUser(user));
+        assertThrows(FieldAlreadyExistsException.class, () -> userAdapter.saveUser(user));
     }
 
     @Test

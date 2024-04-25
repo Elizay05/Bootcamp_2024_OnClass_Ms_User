@@ -6,6 +6,11 @@ import com.example.bootcamp_2024_onclass_ms_user.adapters.driving.http.mapper.IU
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driving.http.mapper.IUserResponseMapper;
 import com.example.bootcamp_2024_onclass_ms_user.domain.api.IUserServicePort;
 import com.example.bootcamp_2024_onclass_ms_user.domain.model.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +27,15 @@ public class UserRestControllerAdapter {
     private final IUserRequestMapper userRequestMapper;
     private final IUserResponseMapper userResponseMapper;
 
+    @Operation(summary = "Create a new ADMINISTRATOR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Correct create a new administrator",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "The email or identification document already exists in the system or the role is not valid or request fields are invalid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content),
+            @ApiResponse(responseCode = "401", ref = "#/components/responses/UnauthorizedError")
+    })
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR')")
     @PostMapping("/admin")
     public ResponseEntity<UserResponse> addAdmin(@Valid @RequestBody AddUserRequest request) {
@@ -31,6 +45,15 @@ public class UserRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Create a new TUTOR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Correct create a new tutor",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "The email or identification document already exists in the system or the role is not valid or request fields are invalid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content),
+            @ApiResponse(responseCode = "401", ref = "#/components/responses/UnauthorizedError")
+    })
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR')")
     @PostMapping("/tutor")
     public ResponseEntity<UserResponse> addTutor(@Valid @RequestBody AddUserRequest request) {
@@ -40,6 +63,17 @@ public class UserRestControllerAdapter {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
+
+    @Operation(summary = "Create a new STUDENT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Correct create a new student",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "The email or identification document already exists in the system or the role is not valid or request fields are invalid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content),
+            @ApiResponse(responseCode = "401", ref = "#/components/responses/UnauthorizedError")
+    })
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR') or hasAnyAuthority('TUTOR')")
     @PostMapping("/student")
     public ResponseEntity<UserResponse> addStudent(@Valid @RequestBody AddUserRequest request) {

@@ -2,7 +2,7 @@ package com.example.bootcamp_2024_onclass_ms_user.configuration.exceptionhandler
 
 
 import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.ElementNotFoundException;
-import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.IdentificationDocumentAlreadyExistsException;
+import com.example.bootcamp_2024_onclass_ms_user.adapters.driven.jpa.mysql.exception.FieldAlreadyExistsException;
 import com.example.bootcamp_2024_onclass_ms_user.configuration.Constants;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidArgumentsEmailException;
 import com.example.bootcamp_2024_onclass_ms_user.domain.exception.InvalidRoleException;
@@ -35,10 +35,11 @@ public class ControllerAdvisor {
                 Constants.ELEMENT_NOT_FOUND_EXCEPTION_MESSAGE, HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()));
     }
 
-    @ExceptionHandler(IdentificationDocumentAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleIdentificationDocumentAlreadyExistsException() {
+    @ExceptionHandler(FieldAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleFieldAlreadyExistsException(FieldAlreadyExistsException e) {
+        String errorMessage = String.format(Constants.FIELD_ALREADY_EXISTS, e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(
-                Constants.IDENTIFICATION_DOCUMENT_ALREADY_EXISTS, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+                errorMessage, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(InvalidArgumentsEmailException.class)

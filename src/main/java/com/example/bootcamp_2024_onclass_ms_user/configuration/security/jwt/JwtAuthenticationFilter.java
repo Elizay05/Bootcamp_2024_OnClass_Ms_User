@@ -23,6 +23,8 @@ import io.jsonwebtoken.security.SignatureException;
 
 import java.io.IOException;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -47,10 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        //Dividir el código en métodos para que sea más entendible.
-        //Una parte es extraer toda la información del token
-        //Otra parte es setearle
-        //meter todos los llamados en el try
         try {
             userEmail = jwtService.extractUsername(jwt);
             userRole = jwtService.extractRol(jwt);
