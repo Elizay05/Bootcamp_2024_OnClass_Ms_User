@@ -27,6 +27,21 @@ public class UserRestControllerAdapter {
     private final IUserRequestMapper userRequestMapper;
     private final IUserResponseMapper userResponseMapper;
 
+    @Operation(summary = "Create a free ADMINISTRATOR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Correct create a new administrator",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "The email or identification document already exists in the system or the role is not valid or request fields are invalid", content = @Content),
+    })
+    @PostMapping("/freeAdmin")
+    public ResponseEntity<UserResponse> freeAddAdmin(@Valid @RequestBody AddUserRequest request) {
+        User user = userRequestMapper.addRequestToUser(request);
+        user = userServicePort.saveAdmin(user);
+        UserResponse response = userResponseMapper.toUserResponse(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @Operation(summary = "Create a new ADMINISTRATOR")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Correct create a new administrator",
